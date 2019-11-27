@@ -1,0 +1,93 @@
+Attribute VB_Name = "Module1"
+Option Explicit
+
+Sub stock_analysis():
+
+    Dim ws As Worksheet
+   
+    Dim i As Long
+    
+    Dim LastRow As Long
+    
+    Dim Total As Double
+    
+    Dim j As Integer
+   
+    j = 2
+    
+    Dim Open_price As Double
+    
+    Dim Close_price As Double
+
+    Dim Per_change As Double
+   
+    Dim Volume As Integer
+    Volume = 0
+    Dim year_change As Double
+
+ 
+   For Each ws In Worksheets
+        
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total stock Volume"
+     
+       LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+        For i = 2 To LastRow
+            
+            If ws.Cells(i, 1) = ws.Cells(i, 1).Offset(1, 0) Then
+             
+                    Volume = Volume + 1
+            
+                    Total = Total + ws.Cells(i, 7)
+               
+                If Volume = 1 Then
+                
+                    Open_price = ws.Cells(i, 3)
+           
+                Else
+                End If
+            Else
+                
+                Total = Total + ws.Cells(i, 7)
+
+                ws.Cells(j, 9) = ws.Cells(i, 1)
+                ws.Cells(j, 12) = Total
+                
+                Close_price = ws.Cells(i, 6)
+          
+                  If Open_price <> 0 Then
+                     Per_change = ((Close_price - Open_price) / Open_price)
+                     year_change = Close_price - Open_price
+                  Else
+                     Per_change = 0
+                     year_change = 0
+                  End If
+               
+                ws.Cells(j, 11) = Per_change
+                ws.Cells(j, 11).NumberFormat = "0.00%"
+                ws.Cells(j, 10) = year_change
+                  
+                    If ws.Cells(j, 10).Value > 0 Then
+                        ws.Cells(j, 10).Interior.ColorIndex = 4
+                    Else
+                        ws.Cells(j, 10).Interior.ColorIndex = 3
+                    End If
+             
+               Total = 0
+               
+                j = j + 1
+                
+                Volume = 0
+            End If
+          Next i
+    
+        j = 2
+  
+  Next ws
+End Sub
+
+
+
